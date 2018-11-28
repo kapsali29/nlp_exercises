@@ -1,3 +1,8 @@
+from sklearn.ensemble import RandomForestClassifier
+
+from GloveClassifier import GloveClassifier
+
+
 def read_train_data():
     labels = []
     contents = []
@@ -22,4 +27,15 @@ def read_test_data():
     return ytest, xtest
 
 
-read_train_data()
+
+labels, contents = read_train_data()
+test_labels, test_contents = read_test_data()
+
+clf = GloveClassifier("large_files/glove.6B.50d.txt")
+Xtrain = clf.fit_transform(contents)
+Xtest = clf.fit_transform(test_contents)
+
+model = RandomForestClassifier(n_estimators=200)
+model.fit(Xtrain, labels)
+print("train score:", model.score(Xtrain, labels))
+print("test score:", model.score(Xtest, test_labels))
